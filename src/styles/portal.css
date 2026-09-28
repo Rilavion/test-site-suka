@@ -1,0 +1,1151 @@
+/* Portal art direction. Shared tokens remain in tokens.css. */
+body {
+  font-size: 15px;
+}
+.site-header {
+  padding-block: 22px;
+}
+.brand-text {
+  max-width: 330px;
+}
+.brand-text b {
+  font-size: 13px;
+  line-height: 1.5;
+  letter-spacing: 0.035em;
+}
+.brand-text small {
+  font-size: 12px;
+  letter-spacing: 0.07em;
+}
+.mark {
+  clip-path: none;
+  border: 0;
+  width: 42px;
+  height: 48px;
+}
+.mark svg {
+  width: 100%;
+  height: 100%;
+}
+.header-note {
+  font-size: 12px;
+}
+.menu-trigger {
+  height: 46px;
+  min-width: 110px;
+  justify-content: space-between;
+  border-color: #ffffff35;
+}
+.button {
+  font-size: 12px;
+  min-height: 58px;
+  letter-spacing: 0.1em;
+  padding: 0 20px 0 25px;
+}
+.button-icon {
+  border-radius: 0;
+  border: 0;
+  border-left: 1px solid #ffffff45;
+  padding-left: 15px;
+  width: 35px;
+  height: 22px;
+}
+.text-link {
+  font-size: 12px;
+}
+.eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+}
+.eyebrow-number {
+  font-family: var(--sans);
+  font-style: normal;
+  font-size: 12px;
+}
+.tiny-label {
+  font-size: 12px;
+}
+.title-period {
+  color: var(--on-dark);
+}
+/* Shared page typography and comfortable reading sizes. */
+.display-title,
+.ministry-intro .display-title {
+  font-size: clamp(70px, 9vw, 150px);
+  letter-spacing: -0.065em;
+  line-height: 0.94;
+  font-weight: 550;
+}
+.display-title span,
+.form-main h2 em,
+.staff-title-row h1 em,
+.login-panel h1 em {
+  font-family: var(--sans);
+  font-style: normal;
+  font-weight: 450;
+  letter-spacing: -0.055em;
+}
+.ministry-intro {
+  background-image:
+    linear-gradient(90deg, #171918, #171918d9 55%, #17191870),
+    url("/assets/ministry/colonnade.png");
+  background-size: cover;
+  background-position: center 38%;
+}
+.ministry-seal {
+  opacity: 0.25;
+}
+.ministry-lead p {
+  font-size: 21px;
+}
+.statement-copy,
+.direction-row p,
+.structure-copy > p,
+.leader-bio {
+  font-size: 16px;
+  line-height: 1.85;
+}
+.direction-row h3 {
+  font-size: 24px;
+}
+.leader-info h3 {
+  font-size: clamp(28px, 3.4vw, 52px);
+  line-height: 1.18;
+  letter-spacing: -0.04em;
+  overflow-wrap: anywhere;
+}
+.leader-portrait img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.leader-info {
+  padding: 45px;
+}
+.leader-role {
+  font-size: 16px;
+}
+.submit-top,
+.track-hero,
+.contacts-hero {
+  min-height: 470px;
+  padding-top: 145px;
+  padding-bottom: 48px;
+}
+.submit-top .display-title,
+.track-hero .display-title {
+  font-size: clamp(64px, 8vw, 124px);
+  margin-top: 43px;
+  line-height: 0.94;
+}
+.submit-top > p,
+.track-hero > p {
+  font-size: 16px;
+  line-height: 1.8;
+  margin-top: 22px;
+}
+.submit-side-note {
+  display: none;
+}
+.form-section {
+  padding-top: 65px;
+}
+.form-main h2 {
+  font-size: 48px;
+  line-height: 1.05;
+  letter-spacing: -0.045em;
+}
+.form-instruction {
+  font-size: 16px;
+  line-height: 1.8;
+}
+.field > span,
+.textarea-wrap > span {
+  font-size: 12px;
+}
+.field input,
+.field textarea {
+  font-size: 15px;
+  min-height: 52px;
+}
+.field-error {
+  font-size: 15px;
+}
+.privacy-note,
+.upload-explain,
+.type-footnote {
+  font-size: 15px;
+}
+.form-actions {
+  margin-top: 32px;
+}
+.type-choice strong {
+  font-size: 23px;
+}
+.type-choice small {
+  font-size: 15px;
+}
+.form-main {
+  scroll-margin-top: 32px;
+}
+.form-steps button {
+  font-size: 15px;
+}
+.summary-row > span {
+  font-size: 12px;
+}
+.summary-row > div {
+  font-size: 16px;
+}
+.summary-text {
+  max-height: 220px;
+}
+.demo-warning {
+  font-size: 13px;
+}
+.demo-warning > span {
+  font-size: 12px;
+}
+.upload-zone > strong {
+  font-size: 16px;
+}
+.upload-zone > span:not(.upload-icon) {
+  font-size: 15px;
+}
+.upload-zone > small {
+  font-size: 12px;
+}
+.field input::placeholder,
+.field textarea::placeholder {
+  color: var(--text-secondary);
+}
+.track-workspace {
+  gap: 5vw;
+  grid-template-columns: minmax(290px, 0.72fr) minmax(0, 1.28fr);
+}
+.track-form-card .field input {
+  font-size: 16px;
+}
+.track-placeholder > p {
+  font-size: 16px;
+}
+.track-privacy p {
+  font-size: 15px;
+}
+.case-card-head {
+  flex-wrap: wrap;
+  gap: 14px;
+}
+.case-card-head .status-pill {
+  color: var(--gold-light);
+  border-color: #cfb98e50;
+  background: #cfb98e15;
+}
+.case-event p,
+.public-answer p {
+  font-size: 16px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.case-meta b {
+  font-size: 15px;
+}
+.case-event time {
+  font-size: 12px;
+}
+.case-footnote {
+  font-size: 12px;
+}
+.public-progress-line span {
+  font-size: 12px;
+}
+.staff-title-row h1 {
+  font-size: clamp(50px, 5vw, 80px);
+  line-height: 1;
+  letter-spacing: -0.055em;
+}
+.staff-content {
+  max-width: 1800px;
+}
+.row-person b {
+  font-size: 13px;
+}
+.row-person small {
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+.row-type,
+.row-date,
+.row-assignee {
+  font-size: 13px;
+}
+.status-pill {
+  font-size: 12px;
+}
+.appeal-row {
+  min-height: 83px;
+}
+.table-head,
+.appeal-row {
+  grid-template-columns:
+    minmax(180px, 1.5fr) 100px 125px minmax(95px, 0.7fr)
+    minmax(120px, 1fr) 18px;
+}
+.search-field input {
+  font-size: 15px;
+}
+.staff-date b {
+  font-size: 16px;
+}
+.stat-label {
+  font-size: 15px;
+}
+.stat-block > small {
+  font-size: 12px;
+}
+.detail-heading h1 {
+  font-size: clamp(22px, 3vw, 42px);
+  overflow-wrap: anywhere;
+}
+.detail-layout {
+  grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+}
+.citizen-info h3 {
+  font-size: 20px;
+  overflow-wrap: anywhere;
+}
+.citizen-info p {
+  font-size: 15px;
+  overflow-wrap: anywhere;
+}
+.appeal-full-text {
+  font-size: 16px;
+  line-height: 1.9;
+  overflow-wrap: anywhere;
+  white-space: pre-wrap;
+}
+.detail-block-title h2 {
+  font-size: 12px;
+}
+.staff-event p {
+  font-size: 15px;
+}
+.staff-event small {
+  font-size: 12px;
+}
+.workflow-actions > p,
+.workflow-actions small {
+  font-size: 15px;
+  line-height: 1.7;
+}
+.workflow-actions textarea {
+  font-size: 16px;
+}
+.saved-decision p {
+  font-size: 16px;
+  white-space: pre-wrap;
+  overflow-wrap: anywhere;
+}
+.staff-public-link {
+  font-size: 12px;
+}
+.login-intro {
+  font-size: 16px;
+}
+.login-demo p {
+  font-size: 15px;
+}
+.login-page {
+  background-image:
+    linear-gradient(90deg, #17191866, #171918 60%),
+    url("/assets/ministry/colonnade.png");
+  background-size: cover;
+}
+.login-backdrop {
+  opacity: 0.4;
+}
+.contact-primary > p,
+.contact-cell > p {
+  font-size: 16px;
+}
+.hours-value small {
+  font-size: 15px;
+}
+/* Navigation: stagger restarts on every opening; the number follows focus. */
+.nav-panel-main {
+  display: block;
+  align-content: center;
+}
+.nav-list {
+  width: 100%;
+}
+.nav-item {
+  animation: none;
+  opacity: 0;
+  transform: translateX(35px);
+}
+.nav-open .nav-item {
+  animation: navItemEnter 0.62s calc(0.13s + var(--i) * 0.065s) var(--ease-out)
+    both;
+}
+.nav-item-copy strong {
+  font-size: clamp(23px, 2.45vw, 38px);
+  font-weight: 450;
+}
+.nav-item-copy small {
+  font-size: 13px;
+}
+.nav-item {
+  padding-block: 23px;
+  grid-template-columns: 32px 1fr 25px;
+}
+.nav-visual {
+  z-index: -1;
+  opacity: 0.45;
+  transition: transform 0.75s var(--ease);
+}
+.nav-watermark {
+  font-family: var(--sans);
+  font-weight: 300;
+  font-size: 270px;
+  color: #cfb98e15;
+  top: 20%;
+  left: -10%;
+}
+.nav-index {
+  font-family: var(--sans);
+  font-size: 15px;
+}
+.nav-contact {
+  font-size: 12px;
+}
+.nav-contact a {
+  font-size: 15px;
+}
+.staff-link {
+  font-size: 15px;
+}
+.nav-panel {
+  overflow-y: auto;
+}
+.nav-panel-main {
+  flex: 1 0 auto;
+}
+.nav-panel-top,
+.nav-panel-bottom {
+  flex: none;
+}
+.view-stage {
+  transition:
+    transform 0.8s var(--ease-out),
+    filter 0.8s;
+  will-change: auto;
+}
+.skip-link {
+  position: fixed;
+  left: 20px;
+  top: -70px;
+  z-index: 110;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  padding: 12px 18px;
+}
+.skip-link:focus {
+  top: 14px;
+}
+/* Motion: depth, masks, stagger and independently moving architectural layers. */
+.transition-arrive .page h1 {
+  animation: headlineReveal 0.7s 0.18s both;
+}
+.transition-arrive .page-hero-meta {
+  animation: stageCopy 0.7s 0.15s both;
+}
+.form-main {
+  animation: formAssemble 0.5s var(--ease-out) both;
+}
+.success-screen {
+  animation: successAssemble 0.8s var(--ease-out) both;
+}
+.success-seal {
+  animation: sealAssemble 0.8s 0.1s both;
+}
+.detail-content {
+  animation: detailExpand 0.65s var(--ease-out) both;
+}
+.status-pill {
+  animation: statusReveal 0.4s var(--ease-out);
+}
+@keyframes headlineReveal {
+  from {
+    transform: translateY(65px) rotateX(12deg);
+    clip-path: inset(100% 0 0);
+    opacity: 0.3;
+  }
+  to {
+    transform: none;
+    clip-path: inset(-10% -5%);
+    opacity: 1;
+  }
+}
+@keyframes architectureReveal {
+  from {
+    transform: scale(1.08);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+@keyframes stageCopy {
+  from {
+    transform: translateY(16px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes stageNumber {
+  from {
+    transform: translateY(35px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes titleDepart {
+  to {
+    transform: translateX(-40px) translateY(-15px);
+    opacity: 0;
+  }
+}
+@keyframes formAssemble {
+  from {
+    transform: perspective(1200px) rotateY(3deg) translateX(22px);
+    opacity: 0;
+    clip-path: inset(0 0 20%);
+  }
+  to {
+    transform: none;
+    opacity: 1;
+    clip-path: inset(-2%);
+  }
+}
+@keyframes successAssemble {
+  from {
+    transform: perspective(1000px) translateZ(-45px);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes sealAssemble {
+  from {
+    transform: scale(0.6) rotate(-25deg);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes detailExpand {
+  from {
+    clip-path: inset(0 0 85%);
+    transform: translateY(20px);
+    opacity: 0.2;
+  }
+  to {
+    clip-path: inset(-2%);
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes statusReveal {
+  from {
+    transform: translateY(4px);
+    opacity: 0.2;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@media (max-width: 1100px) {
+  .staff-shell {
+    grid-template-columns: 190px minmax(0, 1fr);
+  }
+  .table-head,
+  .appeal-row {
+    grid-template-columns:
+      minmax(160px, 1.5fr) 88px 110px minmax(105px, 0.9fr)
+      18px;
+  }
+  .row-assignee,
+  .table-head > span:nth-child(4) {
+    display: none;
+  }
+  .staff-content {
+    padding-inline: 25px;
+  }
+  .row-person b {
+    font-size: 12px;
+  }
+  .row-person small {
+    font-size: 12px;
+  }
+  .row-type,
+  .row-date {
+    font-size: 12px;
+  }
+  .appeal-row .status-pill {
+    font-size: 12px;
+  }
+  .detail-layout {
+    grid-template-columns: 1fr;
+  }
+  .detail-side-column {
+    grid-row: 1;
+  }
+  .status-workflow {
+    position: static;
+  }
+  .workflow-actions {
+    max-width: 100%;
+  }
+}
+@media (max-width: 800px) {
+  .nav-panel {
+    width: 75%;
+    min-width: 0;
+  }
+  .track-workspace {
+    grid-template-columns: 1fr;
+  }
+  .track-form-card {
+    max-width: none;
+  }
+  .staff-shell {
+    grid-template-columns: 160px minmax(0, 1fr);
+  }
+  .staff-mini-brand {
+    gap: 7px;
+  }
+  .staff-stats {
+    grid-template-columns: repeat(5, minmax(115px, 1fr));
+  }
+  .table-head {
+    display: none;
+  }
+  .appeal-row {
+    grid-template-columns: 1fr auto;
+    gap: 10px;
+  }
+  .row-person {
+    grid-column: 1;
+    grid-row: 1;
+  }
+  .row-type {
+    grid-column: 1;
+    grid-row: 2;
+  }
+  .row-date {
+    grid-column: 1;
+    grid-row: 3;
+  }
+  .appeal-row > span:nth-child(5) {
+    grid-column: 2;
+    grid-row: 1;
+  }
+  .row-chevron {
+    grid-column: 2;
+    grid-row: 3;
+  }
+  .public-progress-line span {
+    font-size: 12px;
+  }
+  .header-right .staff-chip {
+    display: none;
+  }
+}
+@media (max-width: 600px) {
+  :root {
+    --gutter: 22px;
+    --header-height: 84px;
+  }
+  .site-header {
+    height: 84px;
+  }
+  .brand-text {
+    max-width: 190px;
+  }
+  .brand-text b {
+    font-size: 12px;
+    line-height: 1.45;
+  }
+  .brand-text small {
+    font-size: 12px;
+    line-height: 1.5;
+  }
+  .brand-lockup .mark {
+    width: 31px;
+    height: 37px;
+  }
+  .menu-trigger {
+    height: 38px;
+    min-width: 78px;
+    gap: 9px;
+  }
+  .menu-trigger > span:first-child {
+    font-size: 12px;
+  }
+  .nav-panel {
+    width: 100%;
+    padding: 23px 25px;
+  }
+  .nav-item {
+    padding-block: 20px;
+    grid-template-columns: 27px 1fr 18px;
+  }
+  .nav-item-copy strong {
+    font-size: 25px;
+  }
+  .nav-item-copy small {
+    font-size: 12px;
+  }
+  .nav-panel-main {
+    align-content: center;
+  }
+  .nav-panel-bottom {
+    padding-top: 20px;
+  }
+  .nav-contact a {
+    font-size: 12px;
+  }
+  .nav-contact {
+    font-size: 12px;
+  }
+  .staff-link {
+    font-size: 16px;
+  }
+  .display-title,
+  .ministry-intro .display-title {
+    font-size: 12.7vw;
+    line-height: 1.08;
+    letter-spacing: -0.065em;
+  }
+  .ministry-intro {
+    min-height: 545px;
+  }
+  .ministry-intro .display-title {
+    margin-top: 85px;
+  }
+  .ministry-lead p {
+    font-size: 18px;
+  }
+  .statement-copy,
+  .direction-row p,
+  .structure-copy > p,
+  .leader-bio {
+    font-size: 16px;
+  }
+  .direction-row h3 {
+    font-size: 20px;
+  }
+  .leader-info {
+    padding: 28px 24px;
+  }
+  .leader-info h3 {
+    font-size: 32px;
+  }
+  .leader-portrait {
+    min-height: 370px;
+  }
+  .submit-top,
+  .track-hero,
+  .contacts-hero {
+    min-height: 420px;
+    padding-top: 128px;
+    padding-bottom: 40px;
+  }
+  .submit-top .display-title,
+  .track-hero .display-title {
+    font-size: 13vw;
+    margin-top: 52px;
+  }
+  .submit-top > p,
+  .track-hero > p {
+    font-size: 15px;
+    max-width: 100%;
+    margin-top: 24px;
+  }
+  .eyebrow {
+    font-size: 12px;
+  }
+  .form-section {
+    padding-top: 38px;
+  }
+  .form-main h2 {
+    font-size: 40px;
+  }
+  .form-main .form-instruction {
+    font-size: 16px;
+  }
+  .field input,
+  .field textarea {
+    font-size: 16px;
+  }
+  .form-steps button {
+    width: auto;
+    min-width: 32px;
+    height: 25px;
+    font-size: 0;
+  }
+  .form-steps button > span {
+    width: 23px;
+    height: 23px;
+    font-size: 12px;
+  }
+  .form-steps {
+    gap: 7px;
+  }
+  .form-sidebar {
+    margin-bottom: 65px;
+  }
+  .form-main {
+    scroll-margin-top: 20px;
+  }
+  .summary-row {
+    grid-template-columns: 95px 1fr;
+  }
+  .summary-row > div {
+    font-size: 15px;
+  }
+  .summary-row > span {
+    font-size: 12px;
+  }
+  .success-screen h1 {
+    font-size: 10vw;
+    overflow-wrap: anywhere;
+  }
+  .success-screen h1 em {
+    font-family: var(--sans);
+    font-style: normal;
+  }
+  .credentials-card {
+    grid-template-columns: 1fr;
+  }
+  .credentials-card > div + div {
+    border-left: 0;
+    border-top: 1px solid var(--line);
+  }
+  .credentials-card strong {
+    font-size: 16px;
+  }
+  .track-workspace {
+    padding: 35px 22px;
+    gap: 25px;
+  }
+  .track-form-card .field input {
+    font-size: 16px;
+    letter-spacing: 0.02em;
+  }
+  .track-placeholder {
+    padding: 27px 23px;
+  }
+  .case-card-head h2 {
+    font-size: 16px;
+  }
+  .case-card-head {
+    gap: 12px;
+  }
+  .public-progress-line span {
+    font-size: 12px;
+  }
+  .case-meta b {
+    font-size: 13px;
+  }
+  .case-event p,
+  .public-answer p {
+    font-size: 15px;
+  }
+  .staff-shell {
+    display: block;
+  }
+  .staff-content {
+    padding: 28px 18px 36px;
+  }
+  .staff-title-row h1 {
+    font-size: 48px;
+  }
+  .staff-date b {
+    font-size: 12px;
+  }
+  .stat-label {
+    font-size: 13px;
+  }
+  .stat-block > small {
+    font-size: 12px;
+  }
+  .row-person b {
+    font-size: 12px;
+  }
+  .row-person small {
+    font-size: 13px;
+  }
+  .row-type,
+  .row-date {
+    font-size: 12px;
+  }
+  .row-assignee {
+    display: block;
+  }
+  .row-chevron {
+    display: none;
+  }
+  .appeal-row {
+    padding: 16px 12px;
+  }
+  .appeal-row > span:nth-child(5) {
+    max-width: 115px;
+  }
+  .appeal-row .status-pill {
+    white-space: normal;
+    line-height: 1.5;
+    font-size: 12px;
+  }
+  .detail-layout {
+    display: flex;
+    flex-direction: column;
+  }
+  .detail-side-column {
+    order: -1;
+  }
+  .citizen-info h3 {
+    font-size: 18px;
+  }
+  .citizen-info p {
+    font-size: 13px;
+  }
+  .detail-block {
+    padding: 20px 16px;
+  }
+  .appeal-full-text {
+    font-size: 16px;
+  }
+  .staff-event p {
+    font-size: 15px;
+  }
+  .detail-block-title h2 {
+    font-size: 12px;
+  }
+  .detail-heading h1 {
+    font-size: 23px;
+  }
+  .journal-count {
+    font-size: 12px;
+  }
+  .filter-bar select,
+  .filter-bar input {
+    font-size: 15px;
+  }
+  .staff-public-link {
+    display: block;
+    font-size: 12px;
+  }
+  .staff-live {
+    display: none;
+  }
+  .login-panel h1 {
+    font-size: 47px;
+  }
+  .contact-cell > a,
+  .contact-cell > b {
+    font-size: 17px;
+  }
+  .contact-big {
+    font-size: 30px;
+  }
+}
+@media (max-width: 360px) {
+  :root {
+    --gutter: 17px;
+  }
+  .brand-text {
+    max-width: 151px;
+  }
+  .brand-text b {
+    font-size: 12px;
+  }
+  .menu-trigger {
+    min-width: 69px;
+  }
+  .nav-item-copy strong {
+    font-size: 22px;
+  }
+  .case-card-head h2 {
+    font-size: 15px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+  .nav-open .nav-item {
+    opacity: 1;
+    transform: none;
+  }
+  .view-stage {
+    transform: none !important;
+    filter: none !important;
+  }
+  .page-transition {
+    display: none;
+  }
+  .app-loading {
+    opacity: 1;
+  }
+}
+.nav-watermark {
+  animation: stageNumber 0.65s var(--ease-out) both;
+  letter-spacing: -0.08em;
+}
+.internal-note-form {
+  border-top: 1px solid var(--line);
+  margin-top: 25px;
+  padding-top: 25px;
+}
+#main-content:focus {
+  outline: none;
+}
+.nav-system:not(.nav-open) {
+  visibility: hidden;
+  transition: visibility 0s 0.8s;
+}
+.nav-system.nav-open {
+  visibility: visible;
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-watermark {
+    animation: none;
+  }
+}
+@media (max-width: 600px) {
+  .ministry-intro .display-title {
+    font-size: 11.4vw;
+  }
+  .form-main h2 {
+    font-size: clamp(29px, 9.5vw, 40px);
+  }
+  .ministry-lead p {
+    overflow-wrap: anywhere;
+  }
+  .case-meta {
+    min-width: 0;
+  }
+  .case-meta > div {
+    min-width: 0;
+  }
+}
+.app-root:has(.submission-complete) > .site-header {
+  background: var(--ink);
+}
+.submission-complete {
+  padding-top: var(--header-height);
+}
+.submission-complete .success-screen {
+  min-height: calc(100svh - var(--header-height));
+  padding-top: 75px;
+}
+.submission-complete .success-screen h1 em {
+  font-family: var(--sans);
+  font-style: normal;
+  font-size: 0.75em;
+  letter-spacing: -0.065em;
+  font-weight: 500;
+}
+.nav-panel {
+  overflow-x: hidden;
+}
+.nav-list {
+  overflow: visible;
+}
+.ministry-intro .display-title span {
+  font-family: var(--sans);
+  font-style: normal;
+  font-weight: 450;
+}
+.app-root {
+  background: var(--ink);
+}
+@media (max-width: 600px) {
+  .nav-panel-main {
+    flex: 1 0 auto;
+  }
+  .nav-panel .nav-item {
+    padding-block: 18px;
+  }
+  .nav-panel .nav-list {
+    padding-block: 20px;
+  }
+}
+.view-stage {
+  background: var(--bg-primary);
+}
+.scroll-progress i {
+  width: 100%;
+  transform: scaleX(var(--scroll-progress, 0));
+  transform-origin: left;
+  transition: none;
+}
+@keyframes surveyLight {
+  from {
+    opacity: 0.5;
+  }
+  to {
+    opacity: 1;
+  }
+}
+.passport-preview {
+  width: 100%;
+  text-align: left;
+  color: inherit;
+  cursor: zoom-in;
+  border: 1px solid var(--line);
+  background: transparent;
+  padding: 12px;
+}
+.attachment-modal {
+  width: min(1000px, 100%);
+  max-height: 92svh;
+  overflow: auto;
+}
+.attachment-modal img {
+  display: block;
+  width: 100%;
+  max-height: 62svh;
+  object-fit: contain;
+  background: var(--ink);
+}
+.attachment-modal .modal-body p {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 600px) {
+  .contacts-hero .display-title {
+    font-size: clamp(44px, 12.5vw, 75px);
+    letter-spacing: -0.065em;
+  }
+}

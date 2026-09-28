@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#171716" />
+    <script>
+      try {
+        const saved = localStorage.getItem("mspt-portal-theme");
+        document.documentElement.dataset.theme =
+          saved === "light" || saved === "dark"
+            ? saved
+            : matchMedia("(prefers-color-scheme: dark)").matches
+              ? "dark"
+              : "light";
+      } catch {
+        document.documentElement.dataset.theme = "light";
+      }
+    </script>
+    <style>
+      html {
+        background: #f2f0e9;
+      }
+      html[data-theme="dark"] {
+        background: #191c1a;
+      }
+    </style>
+    <link rel="icon" type="image/svg+xml" href="/assets/branding/emblem.svg" />
+    <meta
+      name="description"
+      content="Официальный сервис обращений граждан Министерства социальной политики и труда Патриаршего федерального округа."
+    />
+    <title>Горячая линия — МСПиТ ПФО</title>
+    <script type="module" crossorigin src="/assets/index-CkoCSzCA.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-BVVxMU-L.css">
+  </head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>
