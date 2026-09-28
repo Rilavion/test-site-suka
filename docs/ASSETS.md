@@ -1,30 +1,52 @@
-# Локальные визуальные ресурсы
+# Визуальные материалы
 
-## Игровой фон Патриков
+Все изображения и шрифты входят в проект. Во время работы сайт не обращается к внешним сетям.
 
-Файл: `public/assets/backgrounds/patriarch-district.jpg`.
+## Кадр Дома Правительства — `public/assets/media/government-house.jpg`
 
-Исходник предоставлен пользователем: кадр RMRP GTA5RP с Домом правительства Патриаршего федерального округа. На главной и в шапке формы он используется как локальный фон с затемнением, кадрированием, медленным параллаксом и плавным масштабированием. Сайт не загружает изображение из внешней сети.
+Источник: `assets-src/patriarch-district.jpg` — скриншот RMRP GTA5RP, предоставленный пользователем. Каталог `assets-src/` лежит вне `public/` и в сборку не попадает: он хранит исходники для повторной обработки.
 
-## Знак RMRP
+Обработка (ImageMagick):
 
-Файл: `public/assets/rmrp/rmrp-forum-logo.png`.
+```sh
+convert assets-src/patriarch-district.jpg \
+  -crop 1560x1080+340+0 +repage -resize 1920x \
+  -modulate 106,112,100 -brightness-contrast 3x8 \
+  -unsharp 0x0.8+0.5+0.02 -quality 86 public/assets/media/government-house.jpg
+```
 
-Локальная копия публичного знака форума RMRP из `https://forum.rmrp.ru/data/assets/logo/photo_2022-03-07_17-41-13.png`. Он используется только как небольшой знак принадлежности проекта на главной; основной айдентикой портала остаётся эмблема МСПиТ. Четыре ссылки на вложения форума, присланные пользователем, требуют авторизации, поэтому сайт от них не зависит.
+Кадрирование убирает полосу игровых никнеймов в левой части экрана; коррекция возвращает закатный тон, потерянный при затемнении. Соотношение 1920×1329 выбрано специально: на вытянутых экранах кадр обрезается меньше, поэтому здание не выглядит приближённым.
 
-## Архитектурное изображение
+`media/government-house-tiny.jpg` (48 px) — размытая миниатюра, которая показывается фоном, пока грузится основной кадр.
 
-Файл: `public/assets/ministry/colonnade.png`.
-Создано встроенным инструментом imagegen для этого проекта. В приложение включена локальная копия; никаких внешних изображений или API при работе сайта нет.
+Используется на главной и на странице контактов.
 
-Финальный prompt:
+## Колоннада — `public/assets/media/colonnade.jpg`
 
-> Use case: stylized-concept. Asset type: architectural editorial hero image for a premium fictional Russian government ministry website. Create a dramatic photoreal architectural close-up of a monumental ivory limestone neoclassical colonnade, 4 huge fluted columns and finely detailed cornice seen from a low angle, cropped sculptural fragment rather than a whole building. Columns on the right 70 percent of frame, left 30 percent fades into nearly black charcoal atmospheric negative space. Black background, soft warm ivory raking light from upper left, deep chiaroscuro shadows, refined realistic stone texture and carved details, subtle bronze reflections, museum-quality architectural photography. Landscape 3:2 composition. No text, no logos, no flags, no people, no watermark, no website UI. This will sit behind real HTML typography, so keep the left half dark and restrained.
+Создана встроенным инструментом генерации изображений для этого проекта, сжата до 1600 px.
 
-## Знак и аватары
+Prompt:
 
-`public/assets/branding/emblem.svg` — геометрический щит с монограммой М, созданный как локальная SVG-графика. Не официальный государственный герб.
+> Use case: stylized-concept. Asset type: architectural editorial hero image for a premium fictional Russian government ministry website. Create a dramatic photoreal architectural close-up of a monumental ivory limestone neoclassical colonnade, 4 huge fluted columns and finely detailed cornice seen from a low angle, cropped sculptural fragment rather than a whole building. Columns on the right 70 percent of frame, left 30 percent fades into nearly black charcoal atmospheric negative space. Black background, soft warm ivory raking light from upper left, deep chiaroscuro shadows, refined realistic stone texture and carved details, subtle bronze reflections, museum-quality architectural photography. Landscape 3:2 composition. No text, no logos, no flags, no people, no watermark, no website UI.
 
-`public/assets/leadership/profile-1.svg` … `profile-3.svg` — нейтральные геометрические аватары, а не фотографии реальных людей. Заменяются любыми локальными портретами через `src/data/leadership.js`.
+Используется в блоке «О Министерстве» на главной и на экране служебного входа.
 
-Шрифт Manrope включён npm-пакетом Fontsource. Лицензия OFL находится в установленном пакете; файл лицензии также поставляется в `public/assets/branding/Manrope-OFL.txt`.
+## Знак RMRP — `public/assets/rmrp/rmrp-forum-logo.png`
+
+Локальная копия публичного знака форума RMRP (`https://forum.rmrp.ru/data/assets/logo/...`). Применяется как небольшая отметка принадлежности проекта: бейдж на первом экране и строка в подвале.
+
+Четыре ссылки на вложения форума, присланные пользователем, требуют авторизации и не отдают файл по прямому запросу, поэтому сайт от них не зависит.
+
+## Эмблема Министерства — `public/assets/branding/emblem.svg`
+
+Векторный знак, нарисованный вручную для этого проекта: геральдический щит, звезда и неоклассический портик с четырьмя колоннами и ступенями. Не является официальным государственным гербом.
+
+Файл используется как favicon. Те же контуры продублированы в компоненте `Mark` (`src/components/ui/Primitives.jsx`), чтобы знак наследовал цвет темы. **При замене эмблемы обновите оба места.**
+
+## Аватары руководства
+
+Отдельных файлов нет: профили показываются монограммами (`.monogram`) в трёх фирменных градиентах — бордовый, латунный, оливковый. Цвет задаётся полем `tone` в `src/data/leadership.js`. Чтобы поставить настоящие портреты, добавьте в данные поле с путём и выведите `<img>` вместо монограммы.
+
+## Шрифт
+
+Manrope Variable через npm-пакет `@fontsource-variable/manrope`, собирается в `dist/assets`. Текст интерфейса — настоящие HTML-элементы, не часть изображений. Лицензия OFL: `public/assets/branding/Manrope-OFL.txt`.

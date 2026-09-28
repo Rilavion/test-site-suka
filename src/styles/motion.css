@@ -1,0 +1,316 @@
+/* ============================================================
+   ДВИЖЕНИЕ: переходы между разделами, появление контента
+   Всё построено на transform/opacity — без blur и filter на
+   больших поверхностях, чтобы не нагружать GPU.
+   ============================================================ */
+
+/* ——— Переход между страницами через View Transitions API ——— */
+
+::view-transition-old(root),
+::view-transition-new(root) {
+  animation: none;
+  mix-blend-mode: normal;
+}
+
+::view-transition-old(root) {
+  animation: 300ms var(--ease) both vt-out;
+}
+
+::view-transition-new(root) {
+  animation: 620ms var(--ease-soft) 120ms both vt-in;
+}
+
+@keyframes vt-out {
+  to {
+    opacity: 0;
+    transform: translateY(-14px) scale(0.994);
+  }
+}
+
+@keyframes vt-in {
+  from {
+    opacity: 0;
+    transform: translateY(26px) scale(0.992);
+  }
+}
+
+/* шапка и подвал не должны «дёргаться» вместе со страницей */
+.site-header {
+  view-transition-name: site-header;
+}
+
+::view-transition-old(site-header) {
+  animation: 200ms var(--ease) both vt-header-out;
+}
+
+::view-transition-new(site-header) {
+  animation: 340ms var(--ease-soft) 80ms both vt-header-in;
+}
+
+@keyframes vt-header-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes vt-header-in {
+  from {
+    opacity: 0;
+  }
+}
+
+/* ——— Резервный переход для браузеров без View Transitions ——— */
+
+.route-leaving .view-stage {
+  animation: stage-out 280ms var(--ease) both;
+}
+
+.route-entering .view-stage {
+  animation: stage-in 600ms var(--ease-soft) both;
+}
+
+@keyframes stage-out {
+  to {
+    opacity: 0;
+    transform: translateY(-12px);
+  }
+}
+
+@keyframes stage-in {
+  from {
+    opacity: 0;
+    transform: translateY(22px);
+  }
+}
+
+/* ——— Тонкая полоса прогресса перехода ——— */
+
+.route-progress {
+  position: fixed;
+  inset: 0 0 auto;
+  height: 2px;
+  z-index: 55;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.route-progress i {
+  display: block;
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--brass) 30%,
+    var(--brand) 70%,
+    transparent
+  );
+  transform: translateX(-100%);
+  animation: sweep 900ms var(--ease-soft) both;
+}
+
+@keyframes sweep {
+  to {
+    transform: translateX(100%);
+  }
+}
+
+/* ——— Заголовок: буквы «впадают» по очереди ——— */
+
+.split-title {
+  display: block;
+}
+
+.split-line {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.2em;
+  margin-bottom: -0.16em;
+}
+
+.split-char {
+  display: inline-block;
+  white-space: pre;
+  transform-origin: 50% 90%;
+  animation: char-drop 760ms var(--ease-soft) both;
+  animation-delay: calc(var(--ci) * 26ms + var(--base-delay, 0ms));
+}
+
+@keyframes char-drop {
+  from {
+    opacity: 0;
+    transform: translateY(1.08em) scale(1.3) rotate(1.4deg);
+  }
+  60% {
+    opacity: 1;
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotate(0);
+  }
+}
+
+/* ——— Появление блоков при прокрутке ——— */
+
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 760ms var(--ease-soft),
+    transform 760ms var(--ease-soft);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+[data-reveal="left"] {
+  transform: translateX(-26px);
+}
+
+[data-reveal="right"] {
+  transform: translateX(26px);
+}
+
+[data-reveal="scale"] {
+  transform: scale(0.965);
+}
+
+[data-reveal].is-revealed {
+  opacity: 1;
+  transform: none;
+}
+
+/* ——— Волна: мягкое «раскрытие» медиаблока ——— */
+
+.wave-reveal {
+  clip-path: inset(0 0 100% 0 round var(--r-lg));
+  transition: clip-path 1100ms var(--ease-soft);
+}
+
+.wave-reveal.is-revealed {
+  clip-path: inset(0 0 0 0 round var(--r-lg));
+}
+
+/* ——— Подчёркивание ссылок «волной» ——— */
+
+.underline-sweep {
+  position: relative;
+}
+
+.underline-sweep::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -3px;
+  height: 1.5px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 460ms var(--ease-soft);
+}
+
+.underline-sweep:hover::after,
+.underline-sweep:focus-visible::after,
+.underline-sweep[aria-current="page"]::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+/* ——— Загрузочная заставка ——— */
+
+.boot-screen {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-boot);
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 18px;
+  background: var(--paper);
+  animation: boot-out 520ms var(--ease) 620ms both;
+}
+
+.boot-screen .mark {
+  color: var(--brass);
+  animation: boot-mark 1s var(--ease-soft) both;
+}
+
+.boot-screen b {
+  font-size: 0.75rem;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+  font-weight: 700;
+  padding-left: 0.34em;
+}
+
+.boot-bar {
+  width: 148px;
+  height: 2px;
+  background: var(--line);
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.boot-bar i {
+  display: block;
+  height: 100%;
+  background: var(--brand);
+  transform-origin: left;
+  animation: boot-fill 900ms var(--ease-soft) both;
+}
+
+@keyframes boot-mark {
+  from {
+    opacity: 0;
+    transform: translateY(12px) scale(0.86);
+  }
+}
+
+@keyframes boot-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+@keyframes boot-out {
+  to {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* ——— Переключение темы: круговая волна ——— */
+
+.theme-wave {
+  position: fixed;
+  z-index: 200;
+  width: 40px;
+  height: 40px;
+  margin: -20px 0 0 -20px;
+  border-radius: 50%;
+  pointer-events: none;
+  border: 2px solid var(--brass);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  [data-reveal] {
+    opacity: 1;
+    transform: none;
+  }
+
+  .wave-reveal {
+    clip-path: none;
+  }
+
+  .split-char {
+    animation: none;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
+}

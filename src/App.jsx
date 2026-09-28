@@ -5,15 +5,10 @@ import React, {
   useRef,
   useState,
 } from "react";
+import { flushSync } from "react-dom";
 import { Header, Navigation } from "./components/navigation/Navigation";
 import SiteFooter from "./components/SiteFooter";
-import {
-  Toast,
-  Mark,
-  Eyebrow,
-  Modal,
-  Button,
-} from "./components/ui/Primitives";
+import { Toast, Mark, Modal, Button } from "./components/ui/Primitives";
 import Icon from "./components/ui/Icon";
 import Home from "./pages/Home";
 import Ministry from "./pages/Ministry";
@@ -33,48 +28,49 @@ import {
 import { navItems } from "./config/site";
 import { createAppealRecord } from "./services/appealService";
 import { motionConfig, reducedMotion } from "./config/motion";
-import { themeConfig } from "./config/theme";
 
-function InitialLoader() {
+function BootScreen() {
   return (
-    <div className="initial-loader" aria-label="Загрузка портала">
-      <div className="loader-content">
-        <Mark light />
-        <span className="loader-ministry">МСПиТ</span>
-        <span className="loader-line">
-          <i />
-        </span>
-        <span className="loader-district">ПАТРИАРШИЙ ФЕДЕРАЛЬНЫЙ ОКРУГ</span>
-      </div>
-      <span className="loader-bottom">ГОСУДАРСТВЕННЫЙ СЕРВИС / 2026</span>
+    <div className="boot-screen" aria-label="Загрузка портала">
+      <Mark size="xl" />
+      <b>МСПиТ · Патриарший федеральный округ</b>
+      <span className="boot-bar">
+        <i />
+      </span>
     </div>
   );
 }
+
 export default function App() {
   const [route, setRoute] = useState(() => ({
     path: window.location.pathname || "/",
     data: window.history.state?.routeData || null,
   }));
-  const [menu, setMenu] = useState(false),
-    [transition, setTransition] = useState(""),
-    [loading, setLoading] = useState(true),
-    [appeals, setAppealsState] = useState(loadAppeals),
-    [user, setUser] = useState(loadSession),
-    [toastState, setToastState] = useState(null),
-    [draftDirty, setDraftDirty] = useState(false),
-    [leavePrompt, setLeavePrompt] = useState(false);
+  const [menu, setMenu] = useState(false);
+  const [booting, setBooting] = useState(true);
+  const [phase, setPhase] = useState("");
+  const [sweep, setSweep] = useState(0);
+  const [appeals, setAppealsState] = useState(loadAppeals);
+  const [user, setUser] = useState(loadSession);
+  const [toastState, setToastState] = useState(null);
+  const [draftDirty, setDraftDirty] = useState(false);
+  const [leavePrompt, setLeavePrompt] = useState(false);
+
   const pendingNavigation = useRef(null);
   const confirmingNavigation = useRef(false);
   const appealStore = useRef(appeals);
   const navigationBusy = useRef(false);
-  const transitionTimers = useRef([]);
+  const timers = useRef([]);
   const stage = useRef(null);
   const scrollPositions = useRef(new Map());
-  const [transitionKind, setTransitionKind] = useState("enter");
-  useEffect(() => () => transitionTimers.current.forEach(clearTimeout), []);
+
+  useEffect(() => () => timers.current.forEach(clearTimeout), []);
+
   useEffect(() => {
     if (stage.current) stage.current.inert = menu || leavePrompt;
   }, [menu, leavePrompt, route.path]);
+
+  /* синхронизация между вкладками */
   useEffect(() => {
     const sync = (e) => {
       if (e.key !== APPEALS_KEY) return;
@@ -84,6 +80,8 @@ export default function App() {
     window.addEventListener("storage", sync);
     return () => window.removeEventListener("storage", sync);
   }, []);
+
+  /* заголовок вкладки и фокус на содержимое */
   useEffect(() => {
     const name =
       navItems.find((item) => item.path === route.path)?.title ||
@@ -93,54 +91,13 @@ export default function App() {
     document.title = `${name} — МСПиТ ПФО`;
     document.querySelector("#main-content")?.focus({ preventScroll: true });
   }, [route.path]);
-  const closeMenu = useCallback(() => setMenu(false), []);
-  const updateDraftDirty = useCallback((value) => setDraftDirty(value), []);
+
   useEffect(() => {
-    const t = setTimeout(() => setLoading(false), 720);
+    const t = setTimeout(() => setBooting(false), 1100);
     return () => clearTimeout(t);
   }, []);
-  useEffect(() => {
-    const pop = () => {
-      const poppedPath = window.location.pathname || "/";
-      const poppedData = window.history.state?.routeData || null;
-      if (
-        route.path === "/submit" &&
-        draftDirty &&
-        !leavePrompt &&
-        poppedPath !== route.path
-      ) {
-        window.history.pushState({ routeData: route.data }, "", route.path);
-        pendingNavigation.current = { path: poppedPath, data: poppedData };
-        setLeavePrompt(true);
-        return;
-      }
-      transitionTimers.current.forEach(clearTimeout);
-      navigationBusy.current = false;
-      setMenu(false);
-      setRoute({ path: poppedPath, data: poppedData });
-      setTransitionKind(poppedPath === "/" ? "rise" : "enter");
-      setTransition("arrive");
-      requestAnimationFrame(() =>
-        window.scrollTo({
-          top:
-            poppedPath === "/"
-              ? 0
-              : scrollPositions.current.get(poppedPath) || 0,
-          behavior: "instant",
-        }),
-      );
-      transitionTimers.current.push(
-        setTimeout(
-          () => setTransition(""),
-          reducedMotion()
-            ? motionConfig.reducedMotionFallback
-            : motionConfig.pageTransitionDuration * 0.62,
-        ),
-      );
-    };
-    window.addEventListener("popstate", pop);
-    return () => window.removeEventListener("popstate", pop);
-  }, [route.path, route.data, draftDirty, leavePrompt]);
+
+  /* ручное восстановление прокрутки */
   useEffect(() => {
     const previous = history.scrollRestoration;
     history.scrollRestoration = "manual";
@@ -152,55 +109,43 @@ export default function App() {
       window.removeEventListener("scroll", save);
     };
   }, []);
-  useEffect(() => {
-    let frame;
-    const onScroll = () => {
-      cancelAnimationFrame(frame);
-      frame = requestAnimationFrame(() => {
-        const d = document.documentElement;
-        const progress =
-          d.scrollHeight <= innerHeight
-            ? 0
-            : d.scrollTop / (d.scrollHeight - innerHeight);
-        d.style.setProperty("--scroll-progress", progress);
-        d.style.setProperty(
-          "--hero-scroll",
-          Math.min(d.scrollTop, 1000) * 0.12 + "px",
-        );
-      });
-    };
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => {
-      window.removeEventListener("scroll", onScroll);
-      cancelAnimationFrame(frame);
-    };
+
+  const applyRoute = useCallback((path, data, scrollTo = 0) => {
+    window.history.pushState({ routeData: data }, "", path);
+    flushSync(() => setRoute({ path, data }));
+    window.scrollTo({ top: scrollTo, behavior: "instant" });
   }, []);
-  useEffect(() => {
-    if (
-      !motionConfig.enabled ||
-      !motionConfig.parallax ||
-      !themeConfig.background.parallax ||
-      window.matchMedia("(prefers-reduced-motion: reduce), (pointer: coarse)")
-        .matches
-    )
+
+  const runTransition = useCallback((apply) => {
+    if (reducedMotion()) {
+      apply();
+      navigationBusy.current = false;
       return;
-    let raf;
-    const move = (e) => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        const x = (e.clientX / innerWidth - 0.5) * 2,
-          y = (e.clientY / innerHeight - 0.5) * 2;
-        document.documentElement.style.setProperty("--pointer-x", x.toFixed(3));
-        document.documentElement.style.setProperty("--pointer-y", y.toFixed(3));
+    }
+    setSweep((n) => n + 1);
+    if (document.startViewTransition) {
+      const transition = document.startViewTransition(() => apply());
+      transition.finished.finally(() => {
+        navigationBusy.current = false;
       });
-    };
-    window.addEventListener("pointermove", move, { passive: true });
-    return () => {
-      window.removeEventListener("pointermove", move);
-      cancelAnimationFrame(raf);
-    };
+      return;
+    }
+    setPhase("route-leaving");
+    timers.current.push(
+      setTimeout(() => {
+        apply();
+        setPhase("route-entering");
+        timers.current.push(
+          setTimeout(() => {
+            setPhase("");
+            navigationBusy.current = false;
+          }, motionConfig.pageTransition),
+        );
+      }, 280),
+    );
   }, []);
+
+  /* переход по маршруту */
   const navigate = useCallback(
     (target, data = null) => {
       const path = target || "/";
@@ -216,50 +161,56 @@ export default function App() {
       }
       if (path === route.path && data === null) return;
       if (navigationBusy.current) return;
-      transitionTimers.current.forEach(clearTimeout);
-      transitionTimers.current = [];
+      timers.current.forEach(clearTimeout);
+      timers.current = [];
       navigationBusy.current = true;
-      const reduced = reducedMotion();
-      setTransitionKind(
-        path.startsWith("/staff/appeals/")
-          ? "focus"
-          : path.startsWith("/staff") && !route.path.startsWith("/staff")
-            ? "secure"
-            : path === "/"
-              ? "rise"
-              : "enter",
-      );
       setMenu(false);
-      setTransition("leave");
-      transitionTimers.current.push(
-        setTimeout(
-          () => {
-            window.history.pushState({ routeData: data }, "", path);
-            setRoute({ path: window.location.pathname, data });
-            window.scrollTo({ top: 0, behavior: "instant" });
-            setTransition("arrive");
-            transitionTimers.current.push(
-              setTimeout(
-                () => {
-                  setTransition("");
-                  navigationBusy.current = false;
-                },
-                reduced
-                  ? motionConfig.reducedMotionFallback
-                  : motionConfig.pageTransitionDuration * 0.62,
-              ),
-            );
-          },
-          reduced ? 0 : motionConfig.pageTransitionDuration * 0.38,
-        ),
-      );
+      runTransition(() => applyRoute(path, data));
     },
-    [route.path, draftDirty],
+    [route.path, draftDirty, runTransition, applyRoute],
   );
+
+  /* кнопка «назад» браузера */
+  useEffect(() => {
+    const pop = () => {
+      const poppedPath = window.location.pathname || "/";
+      const poppedData = window.history.state?.routeData || null;
+      if (
+        route.path === "/submit" &&
+        draftDirty &&
+        !leavePrompt &&
+        poppedPath !== route.path
+      ) {
+        window.history.pushState({ routeData: route.data }, "", route.path);
+        pendingNavigation.current = { path: poppedPath, data: poppedData };
+        setLeavePrompt(true);
+        return;
+      }
+      timers.current.forEach(clearTimeout);
+      navigationBusy.current = false;
+      setMenu(false);
+      const top =
+        poppedPath === "/" ? 0 : scrollPositions.current.get(poppedPath) || 0;
+      const apply = () => {
+        flushSync(() => setRoute({ path: poppedPath, data: poppedData }));
+        window.scrollTo({ top, behavior: "instant" });
+      };
+      if (!reducedMotion() && document.startViewTransition) {
+        setSweep((n) => n + 1);
+        document.startViewTransition(apply);
+      } else {
+        apply();
+      }
+    };
+    window.addEventListener("popstate", pop);
+    return () => window.removeEventListener("popstate", pop);
+  }, [route.path, route.data, draftDirty, leavePrompt]);
+
   const cancelLeave = useCallback(() => {
     setLeavePrompt(false);
     pendingNavigation.current = null;
   }, []);
+
   const confirmLeave = useCallback(() => {
     const target = pendingNavigation.current;
     pendingNavigation.current = null;
@@ -269,10 +220,12 @@ export default function App() {
     if (target) navigate(target.path, target.data);
     confirmingNavigation.current = false;
   }, [navigate]);
+
   const showToast = useCallback((message, type = "success") => {
     setToastState({ message, type, nonce: Date.now() });
   }, []);
   const clearToast = useCallback(() => setToastState(null), []);
+
   const updateAppeals = useCallback((value) => {
     const next =
       typeof value === "function" ? value(appealStore.current) : value;
@@ -280,6 +233,7 @@ export default function App() {
     appealStore.current = next;
     setAppealsState(next);
   }, []);
+
   const createAppeal = useCallback(
     (form) => {
       const appeal = createAppealRecord(form, appealStore.current);
@@ -288,6 +242,7 @@ export default function App() {
     },
     [updateAppeals],
   );
+
   const updateAppeal = useCallback(
     (updated) =>
       updateAppeals((prev) =>
@@ -295,45 +250,44 @@ export default function App() {
       ),
     [updateAppeals],
   );
+
   const login = useCallback(
-    (value) => {
-      const { name, role, email } = value;
+    ({ name, role, email }) => {
       saveSession({ name, role, email });
       setUser({ name, role, email });
       navigate("/staff");
     },
     [navigate],
   );
+
   const logout = useCallback(() => {
     setUser(null);
     saveSession(null);
     navigate("/staff/login");
   }, [navigate]);
+
   const path = route.path.replace(/\/$/, "") || "/";
   const detailMatch = path.match(/^\/staff\/appeals\/(.+)$/);
-  const staffPath = path.startsWith("/staff");
-  const isPrivateView = staffPath;
+  const isPrivateView = path.startsWith("/staff");
   const currentNav = useMemo(
     () => (path === "/" ? "/" : path.startsWith("/staff") ? "/staff" : path),
     [path],
   );
+
   let page;
   if (path === "/") page = <Home navigate={navigate} />;
   else if (path === "/ministry") page = <Ministry navigate={navigate} />;
   else if (path === "/submit")
     page = (
       <SubmitAppeal
-        appeals={appeals}
         onSubmit={createAppeal}
         navigate={navigate}
         toast={showToast}
-        onDirtyChange={updateDraftDirty}
+        onDirtyChange={setDraftDirty}
       />
     );
   else if (path === "/track")
-    page = (
-      <TrackAppeal appeals={appeals} routeData={route.data} toast={showToast} />
-    );
+    page = <TrackAppeal appeals={appeals} routeData={route.data} />;
   else if (path === "/contacts") page = <Contacts navigate={navigate} />;
   else if (path === "/staff/login")
     page = user ? (
@@ -344,10 +298,10 @@ export default function App() {
         onLogout={logout}
       />
     ) : (
-      <StaffLogin onLogin={login} toast={showToast} navigate={navigate} />
+      <StaffLogin onLogin={login} navigate={navigate} />
     );
   else if (path === "/staff" && !user)
-    page = <StaffLogin onLogin={login} toast={showToast} navigate={navigate} />;
+    page = <StaffLogin onLogin={login} navigate={navigate} />;
   else if (path === "/staff")
     page = (
       <StaffDashboard
@@ -358,7 +312,7 @@ export default function App() {
       />
     );
   else if (detailMatch && !user)
-    page = <StaffLogin onLogin={login} toast={showToast} navigate={navigate} />;
+    page = <StaffLogin onLogin={login} navigate={navigate} />;
   else if (detailMatch)
     page = (
       <AppealDetails
@@ -373,62 +327,69 @@ export default function App() {
   else
     page = (
       <div className="not-found">
-        <Eyebrow>СИСТЕМА / 404</Eyebrow>
-        <h1>
-          РАЗДЕЛ
-          <br />
-          <em>НЕ НАЙДЕН</em>
-        </h1>
-        <button className="text-link" onClick={() => navigate("/")}>
-          Вернуться на главную <Icon name="arrow" />
+        <Mark size="lg" />
+        <h1>Раздел не найден</h1>
+        <p className="lead">
+          Возможно, страница была перемещена или адрес указан с ошибкой.
+        </p>
+        <button className="link-arrow" onClick={() => navigate("/")}>
+          Вернуться на главную
+          <Icon name="arrow" size={16} />
         </button>
       </div>
     );
-  const showHeader = !isPrivateView;
-  const showFooter = !isPrivateView && path !== "/";
+
   return (
     <>
       <a className="skip-link" href="#main-content">
         Перейти к содержимому
       </a>
-      {loading && <InitialLoader />}
+      {booting && <BootScreen />}
+
       <div
-        data-transition-kind={transitionKind}
-        className={`app-root ${menu ? "menu-is-open" : ""} ${path === "/" ? "home-app" : ""} ${loading ? "app-loading" : ""} ${isPrivateView ? "private-app" : ""} ${transition ? `transition-${transition}` : ""}`}
+        className={`app-root ${phase} ${isPrivateView ? "is-private" : ""} ${
+          path === "/" ? "is-home" : ""
+        }`}
       >
-        {showHeader && (
+        {!isPrivateView && (
           <Header
             onMenu={() => setMenu(true)}
             navigate={navigate}
             staff={!!user}
             menuOpen={menu}
+            currentPath={currentNav}
           />
         )}
+
         <div className="view-stage" key={path} ref={stage}>
           <main id="main-content" tabIndex={-1}>
             {page}
           </main>
-          {showFooter && <SiteFooter navigate={navigate} />}
+          {!isPrivateView && <SiteFooter navigate={navigate} />}
         </div>
-        {showHeader && (
+
+        {!isPrivateView && (
           <Navigation
             open={menu}
-            onClose={closeMenu}
+            onClose={() => setMenu(false)}
             navigate={navigate}
             currentPath={currentNav}
+            staff={!!user}
           />
         )}
+
         <Toast toast={toastState} onClose={clearToast} />
+
         <Modal
           open={leavePrompt}
           title="Покинуть форму?"
           onClose={cancelLeave}
           actions={
             <>
-              <button className="back-button" onClick={cancelLeave}>
-                ОСТАТЬСЯ
+              <button className="btn btn-quiet btn-sm" onClick={cancelLeave}>
+                <span>Остаться</span>
               </button>
-              <Button variant="burgundy" onClick={confirmLeave}>
+              <Button size="sm" onClick={confirmLeave}>
                 Покинуть страницу
               </Button>
             </>
@@ -439,13 +400,10 @@ export default function App() {
             другой раздел, черновик будет потерян.
           </p>
         </Modal>
-        {transition && (
-          <div className={`page-transition ${transition}`} aria-hidden="true">
-            <div className="transition-surface">
-              <Mark light />
-              <span>МСПиТ · ГОРЯЧАЯ ЛИНИЯ</span>
-              <i />
-            </div>
+
+        {sweep > 0 && (
+          <div className="route-progress" key={sweep} aria-hidden="true">
+            <i />
           </div>
         )}
       </div>
