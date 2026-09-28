@@ -1,167 +1,113 @@
 import React from "react";
-import PageIntro from "../components/PageIntro";
-import Icon from "../components/ui/Icon";
-import { Button, Kicker, Mark, useReveal } from "../components/ui/Primitives";
 import { siteConfig } from "../config/site";
+import { Button, Eyebrow, Mark } from "../components/ui/Primitives";
+import Icon from "../components/ui/Icon";
 import { asset } from "../utils/basePath";
-
 export default function Contacts({ navigate }) {
-  useReveal("contacts");
-  const tel = `tel:${siteConfig.hotline.replace(/[^+\d]/g, "")}`;
-
   return (
-    <div className="page">
-      <PageIntro
-        kicker="Связь с Министерством"
-        title={["Контакты"]}
-        lead="Один звонок или одно сообщение — и специалист горячей линии поможет выбрать верный путь."
-        aside={
-          <div className="intro-card intro-card-accent">
-            <span className="tiny-label">Горячая линия</span>
-            <a className="intro-phone" href={tel}>
-              {siteConfig.hotline}
-            </a>
-            <p className="muted">
-              Бесплатный звонок по территории округа. Обращения через сайт
-              принимаются круглосуточно.
-            </p>
-            <hr className="rule" />
-            <span className="tiny-label">Консультация специалиста</span>
-            <p>{siteConfig.hoursShort}</p>
-          </div>
-        }
-      />
-
-      {/* ——— Каналы связи ——— */}
-      <section className="section">
-        <div className="shell contact-channels">
-          {[
-            {
-              icon: "phone",
-              label: "Телефон",
-              value: siteConfig.hotline,
-              href: tel,
-              note: "Круглосуточный приём обращений, консультации — в рабочие часы",
-            },
-            {
-              icon: "mail",
-              label: "Электронная почта",
-              value: siteConfig.email,
-              href: `mailto:${siteConfig.email}`,
-              note: "Вопросы о работе сервиса и технические обращения",
-            },
-            {
-              icon: "pin",
-              label: "Приёмная",
-              value: siteConfig.address,
-              note: "Личный приём — по предварительной записи",
-            },
-            {
-              icon: "clock",
-              label: "Часы работы",
-              value: siteConfig.hoursShort,
-              note: "Время указано по местному времени округа",
-            },
-          ].map((item, i) => (
-            <article
-              className="channel"
-              key={item.label}
-              data-reveal
-              style={{ "--reveal-delay": `${i * 80}ms` }}
-            >
-              <span className="channel-icon">
-                <Icon name={item.icon} size={20} />
-              </span>
-              <span className="tiny-label">{item.label}</span>
-              {item.href ? (
-                <a className="channel-value underline-sweep" href={item.href}>
-                  {item.value}
-                </a>
-              ) : (
-                <b className="channel-value">{item.value}</b>
-              )}
-              <p>{item.note}</p>
-            </article>
-          ))}
+    <div className="page contacts-page">
+      <section className="page-hero contacts-hero">
+        <div className="page-hero-meta">
+          <Eyebrow number="05">СВЯЗЬ С МИНИСТЕРСТВОМ</Eyebrow>
+          <span>МЫ НА СВЯЗИ КАЖДЫЙ ДЕНЬ</span>
+        </div>
+        <h1 className="display-title">КОНТАКТЫ</h1>
+        <p className="contacts-lead">
+          Один звонок или одно сообщение — и мы поможем выбрать верный путь.
+        </p>
+        <div className="contacts-index">
+          05
+          <br />
+          <span>КАНАЛЫ СВЯЗИ</span>
         </div>
       </section>
-
-      {/* ——— Приёмная ——— */}
-      <section className="section section-tint">
-        <div className="shell place-grid">
-          <figure className="place-media wave-reveal" data-reveal="scale">
-            <img
-              src={asset("assets/media/government-house.jpg")}
-              alt="Здание приёмной Министерства на Соборной площади"
-              loading="lazy"
-            />
-            <figcaption>
-              <Mark size="sm" />
-              <span>
-                <b>Приёмная МСПиТ</b>
-                <small>Патриарск · 59°56′ N / 30°18′ E</small>
-              </span>
-            </figcaption>
-          </figure>
-
-          <div className="place-copy" data-reveal="right">
-            <Kicker>Приёмная Министерства</Kicker>
-            <h2 className="h-xl">
-              Соборная
-              <br />
-              площадь, 4
-            </h2>
-            <p className="body-text">
-              Здание Дома Правительства округа. Личный приём граждан ведётся по
-              предварительной записи — её можно оформить по телефону горячей
-              линии или отправив обращение через сайт.
-            </p>
-            <ul className="place-list">
-              <li>
-                <Icon name="check" size={16} />
-                Центральный вход со стороны Соборной площади
-              </li>
-              <li>
-                <Icon name="check" size={16} />
-                Доступная среда: пандус, лифт, сопровождение
-              </li>
-              <li>
-                <Icon name="check" size={16} />
-                При себе — документ, удостоверяющий личность
-              </li>
-            </ul>
-            <Button variant="secondary" onClick={() => navigate("/submit")}>
-              Задать вопрос онлайн
-            </Button>
-          </div>
+      <section className="contact-grid">
+        <article className="contact-primary">
+          <span className="contact-symbol">
+            <Icon name="phone" size={22} />
+          </span>
+          <Eyebrow>ГОРЯЧАЯ ЛИНИЯ</Eyebrow>
+          <a
+            href={`tel:${siteConfig.hotline.replace(/[^+\d]/g, "")}`}
+            className="contact-big"
+          >
+            {siteConfig.hotline}
+          </a>
+          <p>
+            Бесплатный звонок по территории округа.
+            <br />
+            Обращения принимаются круглосуточно.
+          </p>
+          <span className="contact-foot">
+            КОНСУЛЬТАЦИЯ СПЕЦИАЛИСТА — В ЧАСЫ РАБОТЫ
+          </span>
+        </article>
+        <div className="contact-side">
+          <article className="contact-cell">
+            <span className="contact-symbol">
+              <Icon name="mail" size={20} />
+            </span>
+            <Eyebrow>ЭЛЕКТРОННАЯ ПОЧТА</Eyebrow>
+            <a href={`mailto:${siteConfig.email}`}>{siteConfig.email}</a>
+            <p>Для вопросов о работе сервиса</p>
+          </article>
+          <article className="contact-cell">
+            <span className="contact-symbol">
+              <Icon name="pin" size={20} />
+            </span>
+            <Eyebrow>АДРЕС</Eyebrow>
+            <b>{siteConfig.address}</b>
+            <p>Приём посетителей по предварительной записи</p>
+          </article>
         </div>
       </section>
-
-      {/* ——— Призыв ——— */}
-      <section className="section call-band">
-        <div className="shell call-grid">
-          <div data-reveal="left">
-            <Kicker>Не дозвонились?</Kicker>
-            <h2 className="h-xl">
-              Напишите — <em>ответим письменно</em>
-            </h2>
-            <p className="muted">
-              Электронное обращение регистрируется автоматически и получает
-              номер для отслеживания.
-            </p>
+      <section className="hours-band">
+        <div>
+          <Eyebrow>ГРАФИК РАБОТЫ</Eyebrow>
+          <h2>
+            МЫ РЯДОМ,
+            <br />
+            <em>КОГДА ВАМ НУЖНО.</em>
+          </h2>
+        </div>
+        <div className="hours-value">
+          <span className="hours-dot" />
+          <p>{siteConfig.hours}</p>
+          <small>Время указано по местному времени</small>
+        </div>
+      </section>
+      <section className="contact-map">
+        <div className="map-visual">
+          <img
+            className="contact-place-photo"
+            src={asset("assets/media/government-house.jpg")}
+            alt="Здание приёмной Патриаршего федерального округа"
+          />
+          <div className="contact-place-brand">
+            <Mark light />
+            <span>ПРИЁМНАЯ МСПиТ</span>
           </div>
-          <div className="call-actions" data-reveal="right">
-            <Button onClick={() => navigate("/submit")}>
-              Подать обращение
-            </Button>
-            <Button
-              variant="secondary"
-              icon="search"
-              onClick={() => navigate("/track")}
-            >
-              Проверить статус
-            </Button>
-          </div>
+          <span className="map-label">
+            ПАТРИАРСК
+            <br />
+            59°56′ N / 30°18′ E
+          </span>
+          <span className="map-coordinate map-coord-a">ЦЕНТРАЛЬНЫЙ ВХОД</span>
+        </div>
+        <div className="map-copy">
+          <Eyebrow>ПРИЁМНАЯ МИНИСТЕРСТВА</Eyebrow>
+          <h2>
+            СОБОРНАЯ
+            <br />
+            ПЛОЩАДЬ, 4
+          </h2>
+          <p>
+            Демонстрационный адрес ведомства. Для личного приёма, пожалуйста,
+            предварительно свяжитесь с горячей линией.
+          </p>
+          <Button variant="outline" onClick={() => navigate("/submit")}>
+            Задать вопрос онлайн
+          </Button>
         </div>
       </section>
     </div>

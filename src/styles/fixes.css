@@ -1,0 +1,238 @@
+/* ============================================================
+   ИСПРАВЛЕНИЯ
+
+   Подключается последним. Здесь только починка конкретных
+   дефектов исходной вёрстки — оформление не переделывается.
+
+   Причина большинства «поплывших» мест: portal.css, system.css и
+   experience.css — три слоя заплаток поверх базовых стилей. Один и тот
+   же селектор объявлен по многу раз (.track-workspace — 14, .form-section
+   — 15, .site-header — 11), и слои спорят друг с другом. Здесь эти споры
+   закрываются один раз и явно.
+   ============================================================ */
+
+/* ────────────────────────────────────────────────
+   1. Полоса прогресса прокрутки вверху экрана
+   Тонкая золотая линия через весь верх воспринималась как
+   артефакт вёрстки. Убрана.
+   ──────────────────────────────────────────────── */
+
+.scroll-progress {
+  display: none !important;
+}
+
+/* ────────────────────────────────────────────────
+   2. Фон главной: лаги и слишком крупный кадр
+
+   Было: .ambient-photo растянут до 132% (inset -16%) и на него
+   наложен filter: saturate/contrast/brightness. Фильтр на элементе
+   размером больше экрана пересчитывается каждый кадр анимации —
+   отсюда рывки. Цветокоррекция теперь запечена в сам файл
+   government-house.jpg, а в браузере остаются только transform
+   и opacity.
+   ──────────────────────────────────────────────── */
+
+.ambient-photo,
+[data-theme="light"] .ambient-photo,
+[data-theme="dark"] .ambient-photo {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-position: 50% 46%;
+  filter: none;
+  transition: none;
+  transform: translate3d(0, 0, 0);
+  will-change: transform;
+  animation: calmDrift 32s ease-in-out infinite alternate;
+}
+
+@keyframes calmDrift {
+  from {
+    transform: translate3d(0, 0, 0) scale(1.015);
+  }
+  to {
+    transform: translate3d(-0.6%, -0.5%, 0) scale(1.05);
+  }
+}
+
+/* зерно поверх фона тоже анимировалось — оставляем статичным */
+.ambient-scene.with-grain::after {
+  animation: none !important;
+}
+
+/* ────────────────────────────────────────────────
+   3. Статус обращения: этапы налезали друг на друга
+
+   Было: .public-progress-line — flex с justify-content: space-between.
+   Подписи «Регистрация», «Рассмотрение» шире своей доли, соседние
+   колонки перекрывались. Стало: пять равных колонок сетки, подпись
+   переносится внутри своей ячейки и выйти за неё не может.
+   ──────────────────────────────────────────────── */
+
+.public-progress-line {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  align-items: start;
+}
+
+.public-progress-line > div {
+  min-width: 0;
+  padding-inline: 2px;
+}
+
+.public-progress-line > div > span {
+  min-width: 0;
+  text-align: center;
+  line-height: 1.25;
+  overflow-wrap: anywhere;
+}
+
+/* соединительная линия идёт от центра первого кружка до центра последнего */
+.public-progress-line:before {
+  left: 10%;
+  right: 10%;
+}
+
+@media (max-width: 720px) {
+  .public-progress-line {
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 6px;
+    overflow: visible;
+  }
+
+  .public-progress-line > div > span {
+    font-size: 10px;
+    letter-spacing: 0;
+  }
+}
+
+/* ────────────────────────────────────────────────
+   4. Рабочая область страницы статуса
+
+   .track-workspace переопределялся пятью файлами; в части из них
+   у правой колонки не было min-width: 0, поэтому длинный номер дела
+   распирал сетку и карточка выезжала на форму.
+   ──────────────────────────────────────────────── */
+
+.track-workspace > * {
+  min-width: 0;
+}
+
+.track-result-area,
+.track-form-card,
+.case-card {
+  min-width: 0;
+}
+
+.case-card-head {
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.case-card-head h2 {
+  overflow-wrap: anywhere;
+}
+
+.case-meta > div {
+  min-width: 0;
+}
+
+.case-meta b {
+  overflow-wrap: anywhere;
+}
+
+/* ────────────────────────────────────────────────
+   5. Шапка и форма подачи
+
+   Шапка пряталась при прокрутке вниз и возвращалась при малейшем
+   движении вверх. Форма после каждого шага делает scrollTo, шапка
+   на это реагировала и дёргала содержимое. На странице подачи
+   шапка больше не прячется, а якоря учитывают её высоту.
+   ──────────────────────────────────────────────── */
+
+html {
+  scroll-padding-top: calc(var(--header-height) + 16px);
+}
+
+.app-root:has(.submit-page) .site-header.is-hidden,
+.app-root:has(.track-page) .site-header.is-hidden {
+  transform: none !important;
+}
+
+/* ────────────────────────────────────────────────
+   6. Светлая тема: читаемость
+
+   Рамки задавались как #20232129 — 16 % чёрного, на бумажном фоне
+   такие границы почти не видны, и блоки «сливались». Текстовый
+   акцент на светлом фоне тоже был недостаточно контрастным.
+   ──────────────────────────────────────────────── */
+
+[data-theme="light"] {
+  --border: rgba(32, 35, 33, 0.19);
+  --line: rgba(32, 35, 33, 0.19);
+  --text-secondary: #575a52;
+  --muted-dark: #575a52;
+}
+
+[data-theme="light"] .eyebrow span:last-child,
+[data-theme="light"] .tiny-label {
+  color: #4a4d45;
+}
+
+/* ────────────────────────────────────────────────
+   7. Мелочи, мешавшие чтению
+   ──────────────────────────────────────────────── */
+
+/* длинные номера дел не должны распирать контейнеры */
+.case-card h2,
+.detail-id,
+.appeal-id {
+  overflow-wrap: anywhere;
+}
+
+/* картинки внутри карточек не вылезают за границы */
+.page img {
+  max-width: 100%;
+}
+
+/* ────────────────────────────────────────────────
+   8. Боковая навигация: герб вместо крупной цифры
+
+   На подложке панели стояла цифра раздела высотой до 350 px.
+   Такие «декоративные номера» и просили убрать — вместо неё
+   герб Министерства, он же проявляется при наведении на пункт.
+   ──────────────────────────────────────────────── */
+
+.nav-emblem {
+  position: absolute;
+  top: 12%;
+  left: 4%;
+  width: clamp(190px, 26vw, 360px);
+  height: auto;
+  opacity: 0.09;
+  filter: saturate(0.5);
+  pointer-events: none;
+  animation: navEmblemIn 620ms var(--ease-out) both;
+  transition:
+    opacity 0.55s var(--ease),
+    transform 0.55s var(--ease);
+}
+
+@keyframes navEmblemIn {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.965);
+  }
+}
+
+.nav-panel:hover .nav-emblem {
+  opacity: 0.16;
+  transform: scale(1.02);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-emblem {
+    animation: none;
+  }
+}

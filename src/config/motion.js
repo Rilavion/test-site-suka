@@ -1,16 +1,30 @@
 export const motionConfig = {
   enabled: true,
-  /** Длительность перехода между разделами, мс. */
-  pageTransition: 520,
-  /** Длительность круговой волны при смене темы, мс. */
-  themeDuration: 720,
+  intensity: 1,
+  pageTransitionDuration: 900,
+  menuDuration: 720,
+  themeDuration: 800,
+  stepDuration: 380,
+  parallax: true,
+  ambientMotion: true,
+  reducedMotionFallback: 80,
 };
-
 export const reducedMotion = () =>
   !motionConfig.enabled ||
-  (typeof matchMedia === "function" &&
-    matchMedia("(prefers-reduced-motion: reduce)").matches);
-
+  matchMedia("(prefers-reduced-motion: reduce)").matches;
 export function initializeMotion() {
-  document.documentElement.dataset.motion = motionConfig.enabled ? "on" : "off";
+  const root = document.documentElement;
+  root.dataset.motion = motionConfig.enabled ? "on" : "off";
+  root.dataset.ambient = motionConfig.ambientMotion ? "on" : "off";
+  root.style.setProperty("--motion-intensity", motionConfig.intensity);
+  root.style.setProperty(
+    "--page-leave",
+    `${motionConfig.pageTransitionDuration * 0.38}ms`,
+  );
+  root.style.setProperty(
+    "--page-arrive",
+    `${motionConfig.pageTransitionDuration * 0.62}ms`,
+  );
+  root.style.setProperty("--menu-duration", `${motionConfig.menuDuration}ms`);
+  root.style.setProperty("--step-duration", `${motionConfig.stepDuration}ms`);
 }
