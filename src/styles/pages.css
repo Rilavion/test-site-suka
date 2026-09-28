@@ -160,11 +160,13 @@
   flex-direction: column;
   align-items: flex-start;
   justify-content: center;
+  /* safe не даёт «съесть» верх содержимого, если оно выше окна */
+  justify-content: safe center;
   gap: clamp(14px, 2.1vh, 26px);
   max-width: var(--shell);
   padding-block: clamp(18px, 3vh, 44px);
   /* страховка для очень низких окон: полоса появится только если не влезло */
-  overflow-y: auto;
+  overflow: hidden auto;
   overscroll-behavior: contain;
   scrollbar-width: thin;
 }
