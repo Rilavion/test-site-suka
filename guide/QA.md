@@ -53,8 +53,8 @@ BASE_PATH=/test-site-suka/ npm run test:render
 BASE_PATH=/test-site-suka/ npm run build
 ```
 
-Сборка для подкаталога проверена отдельно: `vite preview` отдаёт `200` на `/test-site-suka/`,
-`/test-site-suka/ministry` (через `404.html`) и на все файлы из `public/`.
+Сборка для подкаталога (`npm run build:pages`) проверена отдельно: `vite preview` отдаёт `200`
+на `/test-site-suka/`, на `/test-site-suka/ministry` — через `404.html` — и на все файлы из `public/`.
 
 ## Известные ограничения
 
