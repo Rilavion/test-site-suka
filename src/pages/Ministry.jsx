@@ -3,7 +3,14 @@ import PageIntro from "../components/PageIntro";
 import Icon from "../components/ui/Icon";
 import { Button, Kicker, Mark, useReveal } from "../components/ui/Primitives";
 import { leadership } from "../data/leadership";
-import { ministryDirections, ministryFacts, siteConfig } from "../config/site";
+import {
+  appealFlow,
+  hotlineServices,
+  ministryDirections,
+  ministryFacts,
+  siteConfig,
+} from "../config/site";
+import { asset } from "../utils/basePath";
 
 export default function Ministry({ navigate }) {
   const [selected, setSelected] = useState(0);
@@ -90,21 +97,123 @@ export default function Ministry({ navigate }) {
         </div>
       </section>
 
-      {/* ——— Структура ——— */}
-      <section className="section">
-        <div className="shell structure-grid">
-          <div className="structure-copy" data-reveal="left">
+      {/* ——— Три способа обратиться ——— */}
+      <section className="section services" id="services">
+        <div className="shell">
+          <div className="section-head">
+            <div data-reveal>
+              <Kicker>Электронная приёмная</Kicker>
+              <h2 className="h-xl">
+                Три способа обратиться
+                <br />в Министерство
+              </h2>
+            </div>
+            <p
+              className="lead"
+              data-reveal
+              style={{ "--reveal-delay": "90ms" }}
+            >
+              Все каналы ведут в одну систему: обращение из формы, звонка или
+              письма получает единый номер и проходит одинаковые этапы
+              рассмотрения.
+            </p>
+          </div>
+
+          <div className="service-row">
+            {hotlineServices.map((item, i) => (
+              <article
+                className="service"
+                key={item.title}
+                data-reveal
+                style={{ "--reveal-delay": `${i * 110}ms` }}
+              >
+                <span className="service-icon">
+                  <Icon name={item.icon} size={22} />
+                </span>
+                <h3 className="h-md">{item.title}</h3>
+                <p>{item.body}</p>
+                <button
+                  className="link-arrow"
+                  onClick={() => navigate(item.path)}
+                >
+                  {item.action}
+                  <Icon name="arrow" size={16} />
+                </button>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ——— Путь обращения ——— */}
+      <section className="section section-tint flow">
+        <div className="shell">
+          <div className="section-head">
+            <div data-reveal>
+              <Kicker>Как проходит обращение</Kicker>
+              <h2 className="h-xl">
+                Понятный путь —<br />
+                от заявки до ответа
+              </h2>
+            </div>
+            <p
+              className="lead"
+              data-reveal
+              style={{ "--reveal-delay": "90ms" }}
+            >
+              На каждом шаге в карточке обращения появляется запись. Вы видите,
+              где сейчас находится дело и кто им занимается.
+            </p>
+          </div>
+
+          <ol className="flow-line">
+            {appealFlow.map((item, i) => (
+              <li
+                key={item.step}
+                data-reveal
+                style={{ "--reveal-delay": `${i * 110}ms` }}
+              >
+                <span className="flow-dot">
+                  <i />
+                </span>
+                <span className="flow-index">
+                  Шаг {String(i + 1).padStart(2, "0")}
+                </span>
+                <h3 className="h-md">{item.step}</h3>
+                <p>{item.body}</p>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </section>
+
+      {/* ——— Ведомство вблизи ——— */}
+      <section className="section teaser">
+        <div className="shell teaser-grid">
+          <figure className="teaser-media wave-reveal" data-reveal="scale">
+            <img
+              src={asset("assets/media/colonnade.jpg")}
+              alt="Фасад здания Министерства"
+              loading="lazy"
+            />
+            <figcaption>
+              <Mark size="sm" />
+              Дом Правительства · Патриарск
+            </figcaption>
+          </figure>
+
+          <div className="teaser-copy" data-reveal="right">
             <Kicker>Структура</Kicker>
             <h2 className="h-xl">
-              Единая система.
+              Ведомство, к которому
               <br />
-              <em>Общая цель.</em>
+              можно <em>обратиться напрямую</em>
             </h2>
             <p className="body-text">
               Министерство объединяет профильные управления, территориальные
               подразделения и службу обратной связи. Такая структура помогает
-              видеть ситуацию целиком и действовать согласованно: обращение
-              гражданина попадает сразу к тем, кто может решить вопрос.
+              видеть ситуацию целиком: обращение гражданина попадает сразу к
+              тем, кто может решить вопрос, без посредников и пересылок.
             </p>
             <button
               className="link-arrow"
@@ -114,22 +223,6 @@ export default function Ministry({ navigate }) {
               <Icon name="arrow" size={16} />
             </button>
           </div>
-
-          <ol className="structure-steps" data-reveal="right">
-            {[
-              ["Принять", "Обращение регистрируется и получает номер"],
-              ["Рассмотреть", "Профильное управление изучает ситуацию"],
-              ["Ответить", "Гражданин получает официальный ответ"],
-            ].map(([title, body], i) => (
-              <li key={title}>
-                <b>{String(i + 1).padStart(2, "0")}</b>
-                <div>
-                  <strong>{title}</strong>
-                  <span>{body}</span>
-                </div>
-              </li>
-            ))}
-          </ol>
         </div>
       </section>
 
@@ -190,15 +283,20 @@ export default function Ministry({ navigate }) {
       <section className="section call-band">
         <div className="shell call-grid">
           <div data-reveal="left">
-            <Kicker>Ваш голос важен</Kicker>
+            <Kicker>Нужна помощь прямо сейчас</Kicker>
             <h2 className="h-xl">
-              Есть вопрос?
-              <br />
-              <em>Мы открыты к диалогу.</em>
+              Позвоните на горячую линию —<br />
+              <em>мы на связи</em>
             </h2>
+            <a
+              className="call-number"
+              href={`tel:${siteConfig.hotline.replace(/[^+\d]/g, "")}`}
+            >
+              {siteConfig.hotline}
+            </a>
             <p className="muted">
-              Обращение можно направить в любое время — ответ придёт в карточку
-              дела.
+              {siteConfig.hoursShort} · обращения через сайт принимаются
+              круглосуточно
             </p>
           </div>
           <div className="call-actions" data-reveal="right">

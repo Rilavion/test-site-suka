@@ -3,6 +3,7 @@ import ThemeSwitch from "../components/ThemeSwitch";
 import Icon from "../components/ui/Icon";
 import { Button, Mark } from "../components/ui/Primitives";
 import { demoCredentials, siteConfig } from "../config/site";
+import { asset } from "../utils/basePath";
 
 export default function StaffLogin({ onLogin, navigate }) {
   const [email, setEmail] = useState("");
@@ -39,7 +40,7 @@ export default function StaffLogin({ onLogin, navigate }) {
   return (
     <div className="page login">
       <aside className="login-aside">
-        <img src="/assets/media/colonnade.jpg" alt="" />
+        <img src={asset("assets/media/colonnade.jpg")} alt="" />
         <div className="login-aside-copy">
           <Mark size="lg" />
           <h2 className="h-lg">

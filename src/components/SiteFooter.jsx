@@ -1,6 +1,7 @@
 import React from "react";
 import { siteConfig, navItems } from "../config/site";
 import { Mark } from "./ui/Primitives";
+import { asset } from "../utils/basePath";
 
 export default function SiteFooter({ navigate }) {
   return (
@@ -54,7 +55,7 @@ export default function SiteFooter({ navigate }) {
             © {new Date().getFullYear()} МСПиТ ПФО · {siteConfig.version}
           </span>
           <span className="footer-rmrp">
-            <img src="/assets/rmrp/rmrp-forum-logo.png" alt="" />
+            <img src={asset("assets/rmrp/rmrp-forum-logo.png")} alt="" />
             {siteConfig.project} · {siteConfig.server}
           </span>
           <button onClick={() => navigate("/staff/login")}>

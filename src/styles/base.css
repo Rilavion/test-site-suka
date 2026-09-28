@@ -322,6 +322,29 @@ em,
   min-height: 60vh;
 }
 
+/* ——— режим неподвижного экрана (главная) ———
+   Документ не прокручивается: слайд занимает ровно высоту окна. */
+
+html.is-fixed-view,
+html.is-fixed-view body {
+  height: 100%;
+  overflow: hidden;
+}
+
+.app-root.is-home {
+  height: 100vh;
+  height: 100dvh;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.app-root.is-home .view-stage,
+.app-root.is-home #main-content,
+.app-root.is-home .page.home {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
 #main-content {
   flex: 1 1 auto;
   outline: none;

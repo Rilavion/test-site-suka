@@ -6,16 +6,17 @@
    ГЛАВНАЯ — первый экран
    ──────────────────────────────────────────────── */
 
+/* Главная — один неподвижный экран ровно во всю высоту окна.
+   Прокрутки нет: шапка лежит поверх кадра, нижняя полоса заменяет подвал. */
 .hero {
   position: relative;
   isolation: isolate;
-  min-height: min(92vh, 860px);
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  padding-block: clamp(72px, 11vh, 132px) clamp(96px, 14vh, 150px);
   margin-top: calc(var(--header-h) * -1);
-  padding-top: calc(var(--header-h) + clamp(56px, 8vh, 100px));
+  padding-top: var(--header-h);
+  height: 100vh;
+  height: 100dvh;
   color: #f6f2ea;
   overflow: hidden;
 }
@@ -30,19 +31,20 @@
   overflow: hidden;
 }
 
-/* фон без анимации: тот же кадр, только статичный */
+/* фон без анимации: тот же кадр, только статичный (url задаётся в JSX) */
 .hero-backdrop-plain {
-  background:
-    linear-gradient(180deg, rgba(8, 10, 8, 0.32), rgba(8, 10, 8, 0.78)),
-    url("/assets/media/government-house.jpg") 50% 46% / cover no-repeat;
+  background-position: 50% 46%;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 .hero-photo {
   position: absolute;
   inset: 0;
-  /* размытая миниатюра показывается, пока грузится основной кадр */
-  background: url("/assets/media/government-house-tiny.jpg") center / cover
-    no-repeat;
+  /* размытая миниатюра (url задаётся в JSX) видна, пока грузится кадр */
+  background-position: center;
+  background-size: cover;
+  background-repeat: no-repeat;
 }
 
 .hero-photo img {
@@ -152,11 +154,24 @@
 
 .hero-inner {
   position: relative;
+  flex: 1;
+  min-height: 0;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: clamp(18px, 2.4vw, 26px);
+  justify-content: center;
+  gap: clamp(14px, 2.1vh, 26px);
   max-width: var(--shell);
+  padding-block: clamp(18px, 3vh, 44px);
+  /* страховка для очень низких окон: полоса появится только если не влезло */
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: thin;
+}
+
+.home .display {
+  /* на низких экранах заголовок ужимается по высоте, а не только по ширине */
+  font-size: clamp(2.3rem, min(6.4vw, 9.4vh), 5.1rem);
 }
 
 .hero-tag {
@@ -256,61 +271,167 @@
   color: #e6c78d;
 }
 
-.hero-scroll {
-  position: absolute;
-  left: 50%;
-  bottom: 26px;
-  translate: -50% 0;
-  display: flex;
-  flex-direction: column;
+/* — крупная кнопка-телефон рядом с действиями — */
+
+.hero-call {
+  display: inline-flex;
   align-items: center;
-  gap: 8px;
-  font-size: 0.68rem;
-  font-weight: 700;
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: rgba(246, 242, 234, 0.72);
-  animation: fade-up 800ms var(--ease-soft) 1000ms both;
+  gap: 12px;
+  padding: 8px 20px 8px 8px;
+  border-radius: var(--r-pill);
+  border: 1px solid rgba(255, 255, 255, 0.28);
+  background: rgba(255, 255, 255, 0.07);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #f6f2ea;
+  transition:
+    background var(--t-fast),
+    border-color var(--t-fast),
+    transform var(--t-fast);
 }
 
-.hero-scroll i {
+.hero-call:hover {
+  background: rgba(255, 255, 255, 0.14);
+  border-color: rgba(255, 255, 255, 0.5);
+  transform: translateY(-2px);
+}
+
+.hero-call i {
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
-  border: 1px solid rgba(255, 255, 255, 0.34);
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  animation: nudge 2.6s var(--ease-in-out) infinite;
+  background: rgba(231, 201, 143, 0.18);
+  color: #e7c98f;
 }
 
-@keyframes nudge {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(5px);
-  }
+.hero-call span {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
 }
 
-.hero-scroll:hover i {
-  background: rgba(255, 255, 255, 0.14);
+.hero-call small {
+  font-size: 0.64rem;
+  font-weight: 700;
+  letter-spacing: 0.11em;
+  text-transform: uppercase;
+  color: rgba(246, 242, 234, 0.62);
 }
 
-@media (max-width: 640px) {
-  .hero {
-    min-height: auto;
+.hero-call b {
+  font-size: 1.02rem;
+  letter-spacing: -0.01em;
+}
+
+/* — нижняя полоса главной: подвала на неподвижном экране нет — */
+
+.hero-foot {
+  position: relative;
+  flex: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  background: linear-gradient(180deg, transparent, rgba(6, 8, 6, 0.42));
+  animation: fade-up 800ms var(--ease-soft) 980ms both;
+}
+
+.hero-foot-inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 14px 26px;
+  padding-block: 14px;
+}
+
+.hero-foot-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #e7c98f;
+}
+
+.hero-foot-brand > span {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
+
+.hero-foot-brand b {
+  font-size: 0.9rem;
+  color: #f6f2ea;
+  letter-spacing: -0.01em;
+}
+
+.hero-foot-brand small {
+  font-size: 0.7rem;
+  color: rgba(246, 242, 234, 0.6);
+}
+
+.hero-foot-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 6px;
+}
+
+.hero-foot-links button {
+  position: relative;
+  padding: 6px 12px;
+  border-radius: var(--r-pill);
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: rgba(246, 242, 234, 0.76);
+  transition:
+    color var(--t-fast),
+    background var(--t-fast);
+}
+
+.hero-foot-links button:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.hero-foot-note {
+  font-size: 0.72rem;
+  color: rgba(246, 242, 234, 0.5);
+}
+
+@media (max-width: 760px) {
+  .hero-facts {
+    padding-top: 16px;
   }
 
   .hero-facts > div + div {
     padding-left: 0;
     border-left: 0;
     border-top: 1px solid rgba(255, 255, 255, 0.18);
-    padding-top: 14px;
-    margin-top: 14px;
+    padding-top: 12px;
+    margin-top: 12px;
   }
 
-  .hero-scroll {
+  .hero-call {
+    width: 100%;
+  }
+
+  .hero-foot-inner {
+    justify-content: center;
+    text-align: center;
+  }
+
+  .hero-foot-note {
+    display: none;
+  }
+}
+
+/* низкие окна: убираем то, без чего экран остаётся понятным */
+@media (max-height: 700px) {
+  .hero-lead {
+    display: none;
+  }
+}
+
+@media (max-height: 580px) {
+  .hero-facts {
     display: none;
   }
 }

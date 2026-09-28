@@ -102,8 +102,11 @@ console.error = (...args) => {
   originalError(...args);
 };
 
+// когда портал собран для подкаталога, адреса в браузере идут с префиксом
+const prefix = (process.env.BASE_PATH || "/").replace(/\/+$/, "");
+
 for (const route of routes) {
-  g.history.pushState({}, "", route);
+  g.history.pushState({}, "", `${prefix}${route}`);
   const host = g.document.createElement("div");
   g.document.body.append(host);
   try {

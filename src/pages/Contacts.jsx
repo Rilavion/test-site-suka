@@ -3,6 +3,7 @@ import PageIntro from "../components/PageIntro";
 import Icon from "../components/ui/Icon";
 import { Button, Kicker, Mark, useReveal } from "../components/ui/Primitives";
 import { siteConfig } from "../config/site";
+import { asset } from "../utils/basePath";
 
 export default function Contacts({ navigate }) {
   useReveal("contacts");
@@ -90,7 +91,7 @@ export default function Contacts({ navigate }) {
         <div className="shell place-grid">
           <figure className="place-media wave-reveal" data-reveal="scale">
             <img
-              src="/assets/media/government-house.jpg"
+              src={asset("assets/media/government-house.jpg")}
               alt="Здание приёмной Министерства на Соборной площади"
               loading="lazy"
             />

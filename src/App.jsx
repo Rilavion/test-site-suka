@@ -28,6 +28,7 @@ import {
 import { navItems } from "./config/site";
 import { createAppealRecord } from "./services/appealService";
 import { motionConfig, reducedMotion } from "./config/motion";
+import { toHref, toRoute } from "./utils/basePath";
 
 function BootScreen() {
   return (
@@ -43,7 +44,7 @@ function BootScreen() {
 
 export default function App() {
   const [route, setRoute] = useState(() => ({
-    path: window.location.pathname || "/",
+    path: toRoute(window.location.pathname),
     data: window.history.state?.routeData || null,
   }));
   const [menu, setMenu] = useState(false);
@@ -97,12 +98,22 @@ export default function App() {
     return () => clearTimeout(t);
   }, []);
 
+  /* главная — неподвижный экран: снимаем прокрутку документа */
+  useEffect(() => {
+    const fixed = (route.path.replace(/\/$/, "") || "/") === "/";
+    document.documentElement.classList.toggle("is-fixed-view", fixed);
+    return () => document.documentElement.classList.remove("is-fixed-view");
+  }, [route.path]);
+
   /* ручное восстановление прокрутки */
   useEffect(() => {
     const previous = history.scrollRestoration;
     history.scrollRestoration = "manual";
     const save = () =>
-      scrollPositions.current.set(window.location.pathname, window.scrollY);
+      scrollPositions.current.set(
+        toRoute(window.location.pathname),
+        window.scrollY,
+      );
     window.addEventListener("scroll", save, { passive: true });
     return () => {
       history.scrollRestoration = previous;
@@ -111,7 +122,7 @@ export default function App() {
   }, []);
 
   const applyRoute = useCallback((path, data, scrollTo = 0) => {
-    window.history.pushState({ routeData: data }, "", path);
+    window.history.pushState({ routeData: data }, "", toHref(path));
     flushSync(() => setRoute({ path, data }));
     window.scrollTo({ top: scrollTo, behavior: "instant" });
   }, []);
@@ -173,7 +184,7 @@ export default function App() {
   /* кнопка «назад» браузера */
   useEffect(() => {
     const pop = () => {
-      const poppedPath = window.location.pathname || "/";
+      const poppedPath = toRoute(window.location.pathname);
       const poppedData = window.history.state?.routeData || null;
       if (
         route.path === "/submit" &&
@@ -181,7 +192,11 @@ export default function App() {
         !leavePrompt &&
         poppedPath !== route.path
       ) {
-        window.history.pushState({ routeData: route.data }, "", route.path);
+        window.history.pushState(
+          { routeData: route.data },
+          "",
+          toHref(route.path),
+        );
         pendingNavigation.current = { path: poppedPath, data: poppedData };
         setLeavePrompt(true);
         return;
@@ -269,6 +284,7 @@ export default function App() {
   const path = route.path.replace(/\/$/, "") || "/";
   const detailMatch = path.match(/^\/staff\/appeals\/(.+)$/);
   const isPrivateView = path.startsWith("/staff");
+  const isHome = path === "/";
   const currentNav = useMemo(
     () => (path === "/" ? "/" : path.startsWith("/staff") ? "/staff" : path),
     [path],
@@ -348,7 +364,7 @@ export default function App() {
 
       <div
         className={`app-root ${phase} ${isPrivateView ? "is-private" : ""} ${
-          path === "/" ? "is-home" : ""
+          isHome ? "is-home" : ""
         }`}
       >
         {!isPrivateView && (
@@ -365,7 +381,7 @@ export default function App() {
           <main id="main-content" tabIndex={-1}>
             {page}
           </main>
-          {!isPrivateView && <SiteFooter navigate={navigate} />}
+          {!isPrivateView && !isHome && <SiteFooter navigate={navigate} />}
         </div>
 
         {!isPrivateView && (
