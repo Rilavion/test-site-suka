@@ -3,7 +3,8 @@ name: Сборка и публикация на GitHub Pages
 on:
   push:
     branches:
-      - main
+      # ветка по умолчанию в этом репозитории называется index
+      - index
       - arena/01a0e713-test-site-suka
   workflow_dispatch:
 
